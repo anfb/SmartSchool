@@ -44,11 +44,20 @@ namespace SmartSchool.webAPI.Controllers
             return Ok(students);
         }
 
-        // .../api/Student/1
-        [HttpGet("{id}")]
+        // .../api/Student/byId?id=1
+        [HttpGet("ById")]
         public IActionResult GetById(int id)
         {
             Student student = students.FirstOrDefault(a => a.Id == id);
+            if(student == null) return BadRequest("Student was not found.");
+            return Ok(student);
+        }
+
+        // .../api/Student/byName?name=Fulano&lastname=barbosa
+        [HttpGet("ByName")]
+        public IActionResult GetByName(string name, string lastName){
+            Student student = students.FirstOrDefault(a => a.Name.ToUpperInvariant().ToLowerInvariant().Contains(name.ToUpperInvariant().ToLowerInvariant()) 
+                                                        && a.LastName.ToUpperInvariant().ToLowerInvariant().Contains(lastName.ToUpperInvariant().ToLowerInvariant()));
             if(student == null) return BadRequest("Student was not found.");
             return Ok(student);
         }
