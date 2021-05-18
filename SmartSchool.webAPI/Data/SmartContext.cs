@@ -13,7 +13,7 @@ namespace SmartSchool.webAPI.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<StudentCourse>().HasKey(AD => new { AD.StudentId, AD.CourseId }); //Many to many
+            builder.Entity<StudentCourse>().HasKey(sc => new { sc.StudentId, sc.CourseId }); //Many to many
         }
     }
 }
