@@ -20,51 +20,66 @@ namespace SmartSchool.webAPI.Controllers
             this.repository = repository;
         }
     
-        #region PUBLIC METHODS
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok();
+            var students = this.repository.GetAllStudents(true);
+            return Ok(students);
         }
 
-        // .../api/Student/byId?id=1
-        [HttpGet("ById")]
-        public IActionResult GetById(int id)
+        [HttpGet("{Id}")]
+        public IActionResult GetStudentById(int id)
         {
-            return Ok();
-        }
-
-        // .../api/Student/byName?name=Fulano&lastname=barbosa
-        [HttpGet("ByName")]
-        public IActionResult GetByName(string name, string lastName)
-        {
-            return Ok();
+            Student student = this.repository.GetStudentById(id, false);
+            if(student == null) return BadRequest("Teacher does not exists.");
+            
+            return Ok(student);
         }
 
         [HttpPost]
         public IActionResult PostStudent(Student student)
         {
-            return Ok(student);
+            this.repository.Add(student);
+            if (this.repository.SaveChanges()) return Ok(student);
+            
+            return BadRequest("Student was not found.");
         }
 
         [HttpPut("{id}")]
         public IActionResult PutSudent(int id, Student student)
         {
-            return Ok(student);
+            Student _student = this.repository.GetStudentById(id);
+            if(_student == null) return BadRequest("Student does not exists.");
+
+            this.repository.Update(student);
+            if(this.repository.SaveChanges()) return Ok(student);
+
+            return BadRequest("Student not updated.");
         }
 
         [HttpPatch("{id}")]
         public IActionResult PatchSudent(int id, Student student)
         {
-            return Ok(student);
+            Student _student = this.repository.GetStudentById(id);
+            if(_student == null) return BadRequest("Student does not exists.");
+
+            this.repository.Update(student);
+            if(this.repository.SaveChanges()) return Ok(student);
+
+            return BadRequest("Student not updated.");
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteStudent(int id)
         {
-            return Ok();
+            Student _student = this.repository.GetStudentById(id);
+            if(_student == null) return BadRequest("Student does not exists.");
+            
+            this.repository.Delete(_student); 
+            if(this.repository.SaveChanges()) return Ok("Student was deleted.");
+            
+            return BadRequest("Student was not deleted.");
         }
-        
-        #endregion  
+
     }
 }
