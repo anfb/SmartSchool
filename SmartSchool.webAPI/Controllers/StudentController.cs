@@ -1,13 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SmartSchool.webAPI.Data;
 using SmartSchool.webAPI.Models;
-
 namespace SmartSchool.webAPI.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")] // api/controllerName
     public class StudentController : ControllerBase
@@ -42,7 +37,7 @@ namespace SmartSchool.webAPI.Controllers
             this.repository.Add(student);
             if (this.repository.SaveChanges()) return Ok(student);
             
-            return BadRequest("Student was not found.");
+            return BadRequest("Unregistered this Student.");
         }
 
         [HttpPut("{id}")]
@@ -72,7 +67,7 @@ namespace SmartSchool.webAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteStudent(int id)
         {
-            Student _student = this.repository.GetStudentById(id);
+            Student _student = this.repository.GetStudentById(id, false);
             if(_student == null) return BadRequest("Student does not exists.");
             
             this.repository.Delete(_student); 
